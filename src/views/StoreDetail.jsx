@@ -19,6 +19,7 @@ function StoreDetail() {
       .then(function (response) {
 
         // console.log(response.data);
+        console.log(response);
 
         let data = response.data;
         data['receivingMemos'] ? data['receivingMemos'] = data['receivingMemos'].length : data['receivingMemos'] = 0;
@@ -63,7 +64,6 @@ function StoreDetail() {
         }
 
         setdetailData(result);
-        // console.log(result);
       })
       .catch(function (error) {
 
@@ -76,19 +76,18 @@ function StoreDetail() {
     const data = {
       'direction': 'ASC',
       'page': 1,
-      'productSetId': '3',
+      // 'productSetId': ['3'],
       'size': 50,
-      'sortColumns': [''],
-      'status': 'ARRIVAL_QUANTITY',
+      // 'sortColumns': [],
+      // 'status': 'ARRIVAL_QUANTITY',
     }
 
-    axios.get('http://wms-24.dknote.net:13301/api/receiving-product?direction=ASC&page=1&productSetId=2&size=50&status=ARRIVAL_QUANTITY', {
-      data,
+    axios.get('http://wms-24.dknote.net:13301/api/receiving-product', {
+      params: data,
       headers: {
         authorization: `Bearer ${access_token}`,
       }
     }).then(function (response) {
-
       console.log(response);
     })
       .catch(function (error) {
@@ -103,7 +102,7 @@ function StoreDetail() {
 
   useEffect(() => {
     getExpecData();
-    getProductData();
+    // getProductData();
   }, []);
 
 
@@ -163,7 +162,7 @@ function StoreDetail() {
 
         <div className='product_box' >
           <div className='store_expected_box_top' > 입고예정 정보 </div>
-          <SearchGraph data={detailData} columnsState={2} />
+          <SearchGraph data={detailData} columnsState={2} getProductData={getProductData} />
 
         </div>
 

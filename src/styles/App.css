@@ -372,6 +372,11 @@
   cursor: pointer;
 }
 
+.page_button.on {
+  background-color: #2550D3;
+  color:white;
+}
+
 .page_button:hover {
   background-color: #2550D3;
   color:white;
@@ -405,6 +410,10 @@
   border:1px solid #7c7cf0;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+.MuiDataGrid-footerContainer.MuiDataGrid-withBorderColor.css-wop1k0-MuiDataGrid-footerContainer {
+  display: none;
 }
 
 /***** memo ******/ 

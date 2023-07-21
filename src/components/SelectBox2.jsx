@@ -19,7 +19,7 @@ function SelectBox2(props) {
             {selectState && (
                 <div className='select_box_container' >
                     {selectBox.map((val, index) => (
-                        <div className='select_box_one' key={index}   >
+                        <div className='select_box_one' key={index} onClick={ e => e.stopPropagation() }  >
                           <input className='selectCheckbox' defaultChecked={false} onClick={ e => e.stopPropagation() } type='checkbox' index={index} vlaue={checkValue[index]} checked={checkValue[index]}  onChange={(e) => onClickValue(e,state)} />{val[0]}
                         </div>
                     ))}

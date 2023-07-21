@@ -6,6 +6,7 @@ import SearchGraph from '../components/SearchGraph';
 import SelectBox from '../components/SelectBox';
 import SelectBox2 from '../components/SelectBox2';
 import { useSelector } from "react-redux";
+import Pagenation from '../components/Pagenation';
 
 function StoreInquiry() {
   const access_token = useSelector((state) => state.access_token.access_token);
@@ -23,7 +24,6 @@ function StoreInquiry() {
   const [select, setSelect] = useState(0);
   const [select2, setSelect2] = useState(0);
   const [select3, setSelect3] = useState(0);
-  const [select4, setSelect4] = useState(0);
   const [select5, setSelect5] = useState(0);
 
   const [checkValue, setCheckValue] = useState([false, false, false, false, false, false, false, false, false]);
@@ -32,14 +32,43 @@ function StoreInquiry() {
   const selectBoxOption = [['등록일자', 'CREATE_DATE'], ['입고예정일', 'SCHEDULE_DATE'], ['최종완료일', 'DONE_DATE']]
   const selectBoxOption2 = [['입고예정 코드', 'PRODUCT_CODE'], ['출고상품명', 'PRODUCT_ITEM_NAME'], ['출고상품코드', 'PRODUCT_CODE'], ['시리얼번호', 'SERIAL_NUMBER'], ['등록자', 'CREATOR'], ['메모내용', 'TEXT_OF_MEMO']]
   const selectBoxOption3 = [['전체'], ['입고예정'], ['부분입하'], ['입하완료'], ['부분입고'], ['입고완료'], ['입고예정취소'], ['회송'], ['양품']]
-  const selectBoxOption4 = [['설로인'], ['소잡는 녀석들'], ['디카르고']]
   const selectBoxOption5 = [['전체'], ['정상입고'], ['양품입고']]
 
   const pageNum = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+  // export const ProductQuantityTypeEnum = {
+  //   ARRIVAL_QUANTITY: 'ARRIVAL_QUANTITY',
+  //   CANCEL_QUANTITY: 'CANCEL_QUANTITY',
+  //   EXPECTED_QUANTITY: 'EXPECTED_QUANTITY',
+  //   LOAD_QUANTITY: 'LOAD_QUANTITY',
+  //   NON_DEFECTIVE_QUANTITY: 'NON_DEFECTIVE_QUANTITY',
+  //   NOT_YET_ARRIVAL_QUANTITY: 'NOT_YET_ARRIVAL_QUANTITY',
+  //   RESENDING_QUANTITY: 'RESENDING_QUANTITY',
+  // };
+  // NOT_YET_ARRIVAL: '미입하',
+  // PART_ARRIVAL: '부분 입하',
+  // ARRIVAL: '입하',
+  // CANCEL: '취소',
+  // RETURN: '회송',
+  // PART_LOAD: '부분 입고',
+  // LOAD: '입고완료',
+  // NON_DEFECTIVE_PRODUCT: '양품',
+
+  const arraryFormat2 = (value, option) => {
+    let result = [];
+    for (let i = 0; i < value.length; i++) {
+      if (i == 0) {
+        continue;
+      }
+      if (value[i] == true) {
+        result.push(option[i][0]);
+      }
+    }
+    return result;
+  }
 
 
-  const onClickValue = (e,state) => {
+  const onClickValue = (e, state) => {
     e.stopPropagation();
     let value = e.target.checked;
     let index = e.target.attributes.index.value;
@@ -47,7 +76,7 @@ function StoreInquiry() {
     let result = [];
     let arr = [];
 
-    if (state == 1 ) {
+    if (state == 1) {
       arr = checkValue;
     } else {
       arr = checkValue2;
@@ -58,13 +87,13 @@ function StoreInquiry() {
         result.push(value);
       }
     } else {
-      for (let i=0; i<arr.length; i++ ) {
-         
-        if (index == i) {
+      for (let j = 0; j < arr.length; j++) {
+        if (index == j) {
           result.push(value);
+        } else {
+          result.push(arr[j]);
         }
-        result.push(arr[i]);
-      }    
+      }
     }
     if (state == 1) {
       setCheckValue(result);
@@ -95,7 +124,6 @@ function StoreInquiry() {
       }
       result += data[i];
     }
-    console.log(result);
     return result;
   }
 
@@ -179,19 +207,16 @@ function StoreInquiry() {
       'chooseIds': false,
       'direction': 'ASC',
       'endDate': dateFormat(endDate),
-      'page': page,
-      'searchText': '',
+      'page': 1,
+      'searchText': searchText,
       'searchDateType': selectBoxOption[select][1],
       'searchTextType': selectBoxOption2[select2][1],
       'size': 50,
       'sortColumns': [],
       'startDate': dateFormat(startDate),
-      'statusList': 1,
-      // 'statusList': '',
-      // 'typeList': [selectBoxOption5[select5][0]],
-      'typeList': '',
-      // 'vendorName': selectBoxOption4[select4][0]
-      'vendorName': '',
+      // 'statusList': ['CANCEL_QUANTITY'],
+      // 'typeList':  arraryFormat(arraryFormat2(checkValue2,selectBoxOption5)),
+      'vendorName': searchText2
     }
 
     setState('submit');
@@ -203,7 +228,7 @@ function StoreInquiry() {
     let data = {
       'chooseIds': true,
       'direction': 'ASC',
-      'endDate': '',
+      'endDate': dateFormat(new Date()),
       'page': 1,
       'searchText': '',
       'searchIds': arraryFormat(summaryData[summary]),
@@ -211,7 +236,7 @@ function StoreInquiry() {
       'searchTextType': '',
       'size': 50,
       'sortColumns': [],
-      'startDate': '',
+      'startDate': dateFormat(new Date()),
       'statusList': '',
       'typeList': '',
       'vendorName': ''
@@ -229,15 +254,15 @@ function StoreInquiry() {
       let data = {
         'chooseIds': true,
         'direction': 'ASC',
-        'endDate': '',
+        'endDate': dateFormat(endDate),
         'page': pagenum + 1,
         'searchText': '',
-        'searchIds': summaryData[summary],
+        'searchIds': arraryFormat(summaryData[summary]),
         'searchDateType': '',
         'searchTextType': '',
         'size': 50,
-        'sortColumns': [''],
-        'startDate': '',
+        'sortColumns': [],
+        'startDate': dateFormat(startDate),
         'statusList': '',
         'typeList': '',
         'vendorName': ''
@@ -249,20 +274,22 @@ function StoreInquiry() {
       let data = {
         'chooseIds': true,
         'direction': 'ASC',
-        'endDate': endDate,
+        'endDate': dateFormat(endDate),
         'page': pagenum + 1,
-        'searchText': '',
+        'searchText': searchText,
         'searchDateType': selectBoxOption[select][1],
         'searchTextType': selectBoxOption2[select2][1],
         'size': 50,
         'sortColumns': [''],
-        'startDate': startDate,
-        'statusList': selectBoxOption3[select3][0],
-        'typeList': [selectBoxOption5[select5][0]],
-        'vendorName': selectBoxOption4[select4][0]
+        'startDate': dateFormat(startDate),
+        'statusList': arraryFormat(arraryFormat2(checkValue, selectBoxOption3)),
+        'typeList': arraryFormat(arraryFormat2(checkValue2, selectBoxOption5)),
+        'vendorName': searchText2
       }
       receivingsExpect(data);
     }
+
+    setPage(pagenum + 1)
   }
 
 
@@ -399,16 +426,16 @@ function StoreInquiry() {
         <div className='search_result_box'>
           <div>
             <SearchGraph data={graphData} columnsState={'1'} />
-
             <div className='page_box' >
               <div className='pageNum_box'  >
                 {pageNum.map((val, index) => (
-                  <div className='page_button' key={index} onClick={() => onClickPageButton(val)} >
+                  <div className={'page_button' + (page == val + 1 ? " on" : "")} key={index} onClick={() => onClickPageButton(val)} >
                     {val + 1}
                   </div>
                 ))}
               </div>
             </div>
+            {/* <Pagenation page={page} data={graphData} onClickPageButton={onClickPageButton} /> */}
           </div>
         </div>
       </div>
